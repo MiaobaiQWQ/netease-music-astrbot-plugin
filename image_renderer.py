@@ -1,5 +1,6 @@
 import asyncio
 import io
+import os
 from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 
@@ -21,11 +22,15 @@ class SearchResultImageRenderer:
             self._fonts = {}
             return self._fonts
 
+        plugin_font = os.path.join(os.path.dirname(__file__), "DreamHanSans-W17.ttc")
+
         candidates = [
+            plugin_font,
             r"C:\Windows\Fonts\msyh.ttc",
             r"C:\Windows\Fonts\msyh.ttf",
             r"C:\Windows\Fonts\simhei.ttf",
             r"C:\Windows\Fonts\simsun.ttc",
+            "DreamHanSans-W17.ttc",
             "msyh.ttc",
             "msyh.ttf",
             "simhei.ttf",
