@@ -22,5 +22,76 @@
     "label": "搜索结果数量",
     "description": "每次搜索时，向用户展示的歌曲选项数量。",
     "default": 5
+  },
+  "search_result_image": {
+    "type": "bool",
+    "label": "搜索结果图片",
+    "description": "开启后，搜索结果将以图片列表形式发送（需要安装 Pillow）。",
+    "default": true
+  },
+  "search_result_include_cover": {
+    "type": "bool",
+    "label": "搜索结果封面",
+    "description": "开启后，搜索结果图片中会尝试显示每首歌的封面（会额外请求封面）。",
+    "default": true
+  },
+  "song_detail_image": {
+    "type": "bool",
+    "label": "歌曲信息卡片",
+    "description": "开启后，播放歌曲时将发送图片信息卡片（需要安装 Pillow）。",
+    "default": true
+  },
+  "group_access_mode": {
+    "type": "string",
+    "label": "群聊名单模式",
+    "description": "off=不限制；whitelist=仅白名单群可用；blacklist=黑名单群不可用。",
+    "default": "off",
+    "options": [
+      "off",
+      "whitelist",
+      "blacklist"
+    ]
+  },
+  "whitelist_groups": {
+    "type": "string",
+    "label": "白名单群号",
+    "description": "仅在 whitelist 模式生效。支持逗号/空格分隔，例如：123,456",
+    "default": ""
+  },
+  "blacklist_groups": {
+    "type": "string",
+    "label": "黑名单群号",
+    "description": "仅在 blacklist 模式生效。支持逗号/空格分隔，例如：123,456",
+    "default": ""
+  },
+  "group_block_tip": {
+    "type": "string",
+    "label": "群禁用提示",
+    "description": "群聊被名单拦截时的提示文案。",
+    "default": "喵~ 本群暂未开启点歌功能哦。"
+  },
+  "cmd_empty_keyword_tip": {
+    "type": "string",
+    "label": "点歌无参数提示",
+    "description": "用户只发送 /点歌 时的提示文案。",
+    "default": "主人，请告诉我您想听什么歌喵~ 例如：/点歌 Lemon"
+  },
+  "natural_language_enabled": {
+    "type": "bool",
+    "label": "自然语言点歌",
+    "description": "开启后，支持通过自然语言触发点歌。",
+    "default": true
+  },
+  "natural_language_regex": {
+    "type": "string",
+    "label": "自然语言正则",
+    "description": "用于从消息中提取关键词的正则表达式。建议包含捕获组用于关键词（默认取第2组或命名组 keyword）。",
+    "default": "(?i)^(来.?一首|播放|听.?听|点歌|唱.?一首|来.?首)\\s*([^\\s].+?)(的歌|的歌曲|的音乐|歌|曲)?$"
+  },
+  "natural_language_keyword_group": {
+    "type": "int",
+    "label": "关键词分组序号",
+    "description": "natural_language_regex 的关键词捕获组序号（默认 2）。如果使用命名组 keyword，则此项可忽略。",
+    "default": 2
   }
 }
