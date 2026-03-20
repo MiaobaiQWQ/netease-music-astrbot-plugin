@@ -67,6 +67,20 @@ class NeteaseMusicAPI:
             data = await r.json()
             return data["songs"][0] if data.get("songs") else None
 
+    async def get_song_details_batch(self, song_ids: List[int]) -> List[Dict[str, Any]]:
+        """批量获取歌曲详细信息。"""
+        ids = [str(int(x)) for x in song_ids if str(x).strip().isdigit() or isinstance(x, int)]
+        if not ids:
+            return []
+        url = f"{self.base_url}/song/detail?ids={','.join(ids)}"
+        async with self.session.get(url) as r:
+            r.raise_for_status()
+            data = await r.json()
+            songs = data.get("songs")
+            if isinstance(songs, list):
+                return songs
+        return []
+
     async def get_audio_url(self, song_id: int, quality: str) -> Optional[str]:
         """
         获取歌曲音频流地址（自动音质回退）。
@@ -474,13 +488,51 @@ class Main(star.Star):
 
         send_result = None
         if self.image_renderer and self.config.get("search_result_image", True):
+            cover_url_by_id: Dict[int, str] = {}
+            if self.config.get("search_result_include_cover", True):
+                try:
+                    song_ids = []
+                    for s in songs:
+                        v = s.get("id")
+                        if isinstance(v, int):
+                            song_ids.append(v)
+                        else:
+                            try:
+                                song_ids.append(int(str(v).strip()))
+                            except Exception:
+                                pass
+                    details = await self.api.get_song_details_batch(song_ids)
+                    for d in details:
+                        try:
+                            sid = int(d.get("id"))
+                        except Exception:
+                            continue
+                        cover = ""
+                        al = d.get("al") or {}
+                        if isinstance(al, dict):
+                            cover = str(al.get("picUrl") or "").strip()
+                        if cover:
+                            cover_url_by_id[sid] = cover
+                except Exception:
+                    cover_url_by_id = {}
+
             items: List[Dict[str, str]] = []
             for song in songs:
                 artists = " / ".join(a.get("name", "") for a in song.get("artists", []) if a.get("name"))
                 album = song.get("album", {}).get("name", "未知专辑")
                 duration_ms = song.get("duration", 0)
                 dur_str = f"{duration_ms//60000}:{(duration_ms%60000)//1000:02d}"
-                cover_url = song.get("album", {}).get("picUrl") or ""
+                song_id = song.get("id")
+                cover_url = ""
+                try:
+                    if isinstance(song_id, int) and song_id in cover_url_by_id:
+                        cover_url = cover_url_by_id[song_id]
+                    else:
+                        cover_url = cover_url_by_id.get(int(str(song_id).strip()), "")
+                except Exception:
+                    cover_url = ""
+                if not cover_url:
+                    cover_url = song.get("album", {}).get("picUrl") or ""
                 items.append(
                     {
                         "name": song.get("name", ""),
