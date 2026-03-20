@@ -1,10 +1,15 @@
+
 # AstrBot 豪华网易云点歌插件
 
 [![version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/NachoCrazy/netease-music-astrbot-plugin)
 [![license](https://img.shields.io/github/license/NachoCrazy/netease-music-astrbot-plugin.svg)](LICENSE)
 
 这是一款为 [AstrBot](https://github.com/AstrBotDevs/AstrBot) 设计的，功能强大且体验豪华的网易云音乐点歌插件。
+https://api-enhanced.kipfel.link/
 
+
+本人提供一个可以直接使用的api接口，轻点用求求了QWQ
+https://api-enhanced.kipfel.link/
 ## ✨ 功能亮点
 
 - **交互式点歌**：通过关键词搜索歌曲，机器人会返回一个列表供您选择。
